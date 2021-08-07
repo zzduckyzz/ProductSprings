@@ -46,7 +46,7 @@ public class ProductController {
         productService.deleteProduct(productId);
         return "delete" + productId;
     }
-    @PostMapping(path = {"/buy/{id}/{qty}", "/buy/{id}/{qty}/"})
+    @PostMapping("/buy/{productId}/{qty}")
     public String buyProduct(@PathVariable int id, @PathVariable int qty) {
 
         Product product =  productService.getProduct(id);
