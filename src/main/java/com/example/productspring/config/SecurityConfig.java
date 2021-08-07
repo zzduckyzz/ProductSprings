@@ -18,8 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication()
                 .dataSource(dataSource);
     }
-
-    //region - Authorization | Configure -
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -33,9 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .permitAll()
-
-
-                //Thêm 2 dòng này nếu dùng API (Đăng nhập kiểu Basic-Auth trong Postman)
                 .and()
                 .httpBasic()
                 .and()
