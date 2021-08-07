@@ -1,10 +1,9 @@
 package com.example.productspring.controller;
 
+import com.example.productspring.Exception.ProductNotFoundException;
 import com.example.productspring.entity.Product;
 import com.example.productspring.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,39 +14,48 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
-    @GetMapping("/getAll")
-    public List<Product> listAll(){
-        return productService.listAll();
+    @GetMapping("/products")
+    public List<Product> getCustomer(){
+        return productService.getProducts();
     }
-    @GetMapping
+    @GetMapping("/products/{productId}")
     public Product getProduct(@PathVariable int productId){
-        Product theProduct = productService.get(customerId);
-        if(theCustomer == null){
-            throw new CustomerNotFoundException("Customer id not found -" + customerId);
+        Product theProduct = productService.getProduct(productId);
+        if(theProduct == null){
+            throw new ProductNotFoundException("Customer id not found -" + productId);
         }
-        return theCustomer;
+        return theProduct;
+    }
+    @PostMapping("/products")
+    public Product addProduct(@RequestBody Product theProduct){
+        theProduct.setId(0);
+        productService.saveProduct(theProduct);
+        return theProduct;
+    }
+    @PutMapping("/products")
+    public Product updateProduct(@RequestBody Product theProduct){
+        productService.saveProduct(theProduct);
+        return theProduct;
+    }
+    @DeleteMapping("/products/{productId}")
+    public String deleteProduct(@PathVariable int productId){
+        Product tempProduct = productService.getProduct(productId);
+        if(tempProduct == null){
+            throw new ProductNotFoundException("not found" + productId);
+        }
+        productService.deleteProduct(productId);
+        return "delete" + productId;
+    }
+    @PostMapping(path = {"/buy/{id}/{qty}", "/buy/{id}/{qty}/"})
+    public String buyProduct(@PathVariable int id, @PathVariable int qty) {
+
+        Product product =  productService.getProduct(id);
+        product.setQuantity(product.getQuantity() - qty);
+
+        productService.saveProduct(product);
+
+        return "Buy Product id - " + id + ", with quantity - " + qty + "| quantity remaining in stock - " + product.getQuantity();
+
     }
 
-
-    @PostMapping("/addProduct")
-    public Product Create(@RequestBody Product product) {
-        Product product1 = productService.save(product);
-        return product1;
-    }
-    @PutMapping("/buy")
-    public ResponseEntity<Product> update(@RequestBody Product theProduct) {
-        Product product = productService.update(theProduct.getId(),theProduct);
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-    @DeleteMapping({"/{productId}"})
-    public ResponseEntity<String> deletepbyId(@PathVariable("productId") int theId) {
-        try {
-            productService.deletebyId(theId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        catch (Exception e) {
-            return new ResponseEntity<>("Not find by id: " + e,HttpStatus.NO_CONTENT);
-        }
-
-    }
 }

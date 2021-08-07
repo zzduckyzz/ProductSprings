@@ -12,41 +12,28 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     private ProductRepository productRepository;
 
+
     @Override
     @Transactional
-    public List<Product> listAll() {
+    public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
     @Override
     @Transactional
-    public Product Create(Product product) {
-        return productRepository.save(product);
+    public void saveProduct(Product theProduct) {
+        productRepository.save(theProduct);
     }
 
     @Override
-    @Transactional
-    public Product getById(int pid) {
-        return productRepository.getById(pid);
+    public Product getProduct(int pId) {
+        return productRepository.getById(pId);
     }
 
     @Override
-    @Transactional
-    public Product update(int id, Product theProduct) {
-        Product product = productRepository.findById(id).get();
-        product.setQuantity(product.getQuantity() - theProduct.getQuantity());
-        return productRepository.save(product);
+    public void deleteProduct(int pId) {
+        productRepository.deleteById(pId);
     }
 
-    @Override
-    @Transactional
-    public Product save(Product theProduct) {
-        return productRepository.save(theProduct);
-    }
 
-    @Override
-    @Transactional
-    public void deletebyId(int theId) {
-        productRepository.deleteById(theId);
-    }
 }
