@@ -47,14 +47,14 @@ public class ProductController {
         return "delete" + productId;
     }
     @PostMapping("/buy/{productId}/{qty}")
-    public String buyProduct(@PathVariable int id, @PathVariable int qty) {
+    public String buyProduct(@PathVariable int id, @PathVariable int quantity) {
 
         Product product =  productService.getProduct(id);
-        product.setQuantity(product.getQuantity() - qty);
+        product.setQuantity(product.getQuantity() - quantity);
 
         productService.saveProduct(product);
 
-        return "Buy Product id - " + id + ", with quantity - " + qty + "| quantity remaining in stock - " + product.getQuantity();
+        return "Buy Product id - " + id + ", with quantity - " + quantity + "| quantity remaining in stock - " + product.getQuantity();
 
     }
 
